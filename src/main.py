@@ -1,6 +1,6 @@
 from urllib.request import urlretrieve
 from threading import Thread
-from src.shared import *
+from shared import *
 
 set_priority()
 
