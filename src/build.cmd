@@ -9,5 +9,5 @@ py -m nuitka --standalone --onefile --windows-console-mode=disable^
 py -m nuitka --standalone --onefile --windows-console-mode=disable^
  --output-dir="__build"^
  --deployment --python-flag="-OO" --python-flag="-S"^
- --output-filename="updater.exe"^
+ --output-filename="update.exe"^
  payload.py
